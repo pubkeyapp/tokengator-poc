@@ -18,6 +18,7 @@
         "assets": ["apps/demo/src/favicon.ico", "apps/demo/src/assets"],
         "styles": ["apps/demo/src/styles.css"],
         "scripts": [],
+        "postcssConfig": "apps/demo/postcss.config.cjs",
         "webpackConfig": "apps/demo/webpack.config.js"
       },
       "configurations": {
