@@ -15,6 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@tokengator/minter": ["libs/minter/src/index.ts"],
+      "@tokengator/presets": ["libs/presets/src/index.ts"],
       "@tokengator/ui": ["libs/ui/src/index.ts"]
     }
   },
