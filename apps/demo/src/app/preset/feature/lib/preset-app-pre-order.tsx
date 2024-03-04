@@ -52,34 +52,40 @@ export function PresetAppPreOrder({ preset }: { preset: Preset }) {
 
 export function PresetAppPreOrderHolders() {
   const query = useGetPreOrderHolders()
-  return query.isLoading ? (
-    <UiLoader />
-  ) : query.data?.length ? (
+  return (
     <UiStack>
       <Group justify="flex-end">
-        <Button onClick={() => query.refetch()}>Refresh</Button>
+        <Button variant="light" onClick={() => query.refetch()}>
+          Refresh
+        </Button>
       </Group>
-      <Table>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Owner</Table.Th>
-            <Table.Th>Amount</Table.Th>
-            <Table.Th>Address</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {query.data?.map((holder) => (
-            <Table.Tr key={holder.pubkey.toBase58()}>
-              <Table.Td>{ellipsify(holder.account.data.parsed.info.owner)}</Table.Td>
-              <Table.Td>{holder.account.data.parsed.info.tokenAmount.uiAmountString}</Table.Td>
-              <Table.Td>{ellipsify(holder.pubkey.toBase58())}</Table.Td>
-            </Table.Tr>
-          ))}
-        </Table.Tbody>
-      </Table>
+      {query.isLoading ? (
+        <UiLoader />
+      ) : query.data?.length ? (
+        <UiStack>
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Owner</Table.Th>
+                <Table.Th>Amount</Table.Th>
+                <Table.Th>Address</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {query.data?.map((holder) => (
+                <Table.Tr key={holder.pubkey.toBase58()}>
+                  <Table.Td>{ellipsify(holder.account.data.parsed.info.owner)}</Table.Td>
+                  <Table.Td>{holder.account.data.parsed.info.tokenAmount.uiAmountString}</Table.Td>
+                  <Table.Td>{ellipsify(holder.pubkey.toBase58())}</Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </UiStack>
+      ) : (
+        <UiWarning message="No pre-order holders found" />
+      )}
     </UiStack>
-  ) : (
-    <UiWarning message="No pre-order holders found" />
   )
 }
 
@@ -98,6 +104,7 @@ export function PresetAppPreOrderMint() {
       />
       <Group justify="flex-end">
         <Button
+          loading={mutation.isPending}
           disabled={!user}
           onClick={() => {
             const address = user?.keypairs.find((k) => k)?.publicKey
