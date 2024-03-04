@@ -3,5 +3,4 @@ if (typeof window !== 'undefined' && typeof window.global === 'undefined' && typ
   window['global'] = window
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   global.Buffer = require('buffer').Buffer
-  console.log('Polyfilled Buffer for @solana/web3.js', global.Buffer)
 }

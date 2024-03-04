@@ -19,9 +19,7 @@ export class SampleUsersCommand extends CommandRunner {
     this.core.logger.log(pc.cyan('Sample users:'))
     for (const user of users) {
       this.core.logger.log(pc.bold(` - ${user.id}`))
-      for (const keypair of user.keypairs) {
-        this.core.logger.log(pc.bold(`   - ${keypair.publicKey}`))
-      }
+      this.core.logger.log(pc.bold(`   - ${user.keypair.publicKey}`))
     }
   }
 
