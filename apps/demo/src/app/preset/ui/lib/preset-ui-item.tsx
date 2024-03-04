@@ -21,7 +21,7 @@ export function PresetUiItem({
         <UiAnchor size="xl" to={to}>
           {preset.name}
         </UiAnchor>
-        <Text c="dimmed" size="sm">
+        <Text c="dimmed" size="sm" ff="mono">
           {description ?? preset.description}
         </Text>
         {children}

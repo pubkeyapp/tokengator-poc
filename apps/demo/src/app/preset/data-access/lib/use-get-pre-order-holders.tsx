@@ -6,8 +6,7 @@ export function useGetPreOrderHolders() {
   const { connection } = useConnection()
   return useQuery({
     queryKey: ['pre-order-holders'],
-    queryFn: async () => {
-      return getPreOrderHolders({ connection })
-    },
+    queryFn: async () => getPreOrderHolders({ connection }),
+    retry: false,
   })
 }

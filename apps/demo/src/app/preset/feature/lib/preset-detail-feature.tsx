@@ -6,8 +6,7 @@ import { UiDebugModal, UiError, UiLoader, UiStack } from '@tokengator/ui'
 import { useParams } from 'react-router-dom'
 import { useKeypair } from '../../../keypair/data-access'
 import { useCloseToken, useCreateToken, useGetTokenMint } from '../../data-access'
-import { PresetUiCard, PresetUiDetails, PresetUiMinter, PresetUiTokenGate } from '../../ui'
-import { PresetApp } from './preset-app'
+import { PresetUiApp, PresetUiCard, PresetUiDetails, PresetUiMinter, PresetUiTokenGate } from '../../ui'
 
 export function PresetDetailWrapper() {
   const { id } = useParams() as { id: string }
@@ -35,27 +34,27 @@ export function PresetDetailScreen({ preset }: { preset: Preset }) {
           <Tabs variant="outline" defaultValue="overview">
             <Tabs.List mb="md">
               <Tabs.Tab value="overview">Overview</Tabs.Tab>
-              <Tabs.Tab value="token-gate">Token Gate</Tabs.Tab>
               <Tabs.Tab value="mint-details">Mint Details</Tabs.Tab>
+              <Tabs.Tab value="token-gate">Token Gate</Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="overview">
               <PresetUiDetails preset={preset} />
             </Tabs.Panel>
-            <Tabs.Panel value="token-gate">
-              <PresetUiTokenGate preset={preset} />
-            </Tabs.Panel>
             <Tabs.Panel value="mint-details">
               <PresetUiMinter preset={preset} />
+            </Tabs.Panel>
+            <Tabs.Panel value="token-gate">
+              <PresetUiTokenGate preset={preset} />
             </Tabs.Panel>
           </Tabs>
         </PresetUiCard>
         {preset.id === 'business-visa' ? (
-          <PresetApp preset={preset} minter={minter} />
+          <PresetUiApp preset={preset} />
         ) : query.isLoading ? (
           <UiLoader />
         ) : query.data ? (
           <UiStack>
-            <PresetApp preset={preset} minter={minter} mint={query.data.mint} />
+            <PresetUiApp preset={preset} mint={query.data.mint} />
             <Group justify="flex-end">
               <Button
                 variant="light"

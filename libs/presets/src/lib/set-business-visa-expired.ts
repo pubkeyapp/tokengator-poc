@@ -12,14 +12,3 @@ export function setBusinessVisaExpired({ connection, minter }: { connection: Con
     ],
   })
 }
-
-export function setBusinessVisaActive({ connection, minter }: { connection: Connection; minter: Minter }) {
-  return updateTokenMinterMetadata({
-    connection,
-    minter,
-    metadata: [
-      ['status', 'active.'],
-      ['expiresAt', new Date(daysFromNow(14)).toISOString()],
-    ],
-  })
-}

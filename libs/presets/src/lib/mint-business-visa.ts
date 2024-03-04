@@ -1,7 +1,7 @@
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
-import { createToken, getTokenAccounts, Minter, mintTokens } from '@tokengator/minter'
+import { createToken, Minter, mintTokens } from '@tokengator/minter'
 import { getFirstFreeBusinessVisa } from './get-business-visa-holders'
-import { getBusinessVisaMintList } from './get-business-visa-mint-list'
+import { hasBusinessVisa } from './has-business-visa'
 import { presetBusinessVisa } from './preset-business-visa'
 
 export async function mintBusinessVisa({
@@ -31,24 +31,13 @@ export async function mintBusinessVisa({
     mint,
     feePayer,
   })
-  const token = await createToken({ connection, minter })
-  console.log(`Token created: ${token}`)
-
-  return mintTokens({
+  const createTokenTx = await createToken({ connection, minter })
+  const mintTx = await mintTokens({
     amount: 1,
     connection,
     destination,
     minter,
   })
-}
 
-export async function hasBusinessVisa({ owner, connection }: { owner: PublicKey; connection: Connection }) {
-  const mintList = getBusinessVisaMintList()
-  const tokenAccounts = await getTokenAccounts({ connection, owner })
-
-  const mints = tokenAccounts.value.map(({ account }) => {
-    return account.data.parsed.info.mint
-  })
-
-  return mints.some((token) => mintList.includes(token))
+  return { createTokenTx, mintTx }
 }

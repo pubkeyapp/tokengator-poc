@@ -6,8 +6,7 @@ export function useGetPaymentHolders() {
   const { connection } = useConnection()
   return useQuery({
     queryKey: ['payment-holders'],
-    queryFn: async () => {
-      return getPaymentHolders({ connection })
-    },
+    queryFn: async () => getPaymentHolders({ connection }),
+    retry: false,
   })
 }

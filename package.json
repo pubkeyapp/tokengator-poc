@@ -2,7 +2,10 @@
   "name": "@tokengator/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev": "nx run demo:serve",
+    "tokengator": "node dist/apps/cli/main.js"
+  },
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.14.5",

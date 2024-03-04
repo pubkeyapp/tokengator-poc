@@ -7,8 +7,12 @@ export function useMintPayment({ feePayer }: { feePayer: Keypair }) {
   const { connection } = useConnection()
   return useMutation({
     mutationKey: ['mint-payment-holders'],
-    mutationFn: async ({ amount, destination }: { amount: number; destination: PublicKey }) => {
-      return mintPayment({ amount, connection, destination, feePayer })
-    },
+    mutationFn: async ({ amount, destination }: { amount: number; destination: PublicKey }) =>
+      mintPayment({
+        amount,
+        connection,
+        destination,
+        feePayer,
+      }),
   })
 }

@@ -20,7 +20,7 @@ export function AppLayout({
     <UiLayout
       footer={
         <Flex h="100%" justify="space-between" align="center" px="md">
-          <Tooltip label="This is a 🅿️ PubKey Product! ">
+          <Tooltip label="This is a 🅿️ PubKey Project! ">
             <Group>
               <UiLogoTypePubKey height={28} />
             </Group>
