@@ -1,4 +1,3 @@
-import { Title } from '@mantine/core'
 import { SampleUser as User, sampleUsers as users } from '@tokengator/sample-users'
 
 import { UiDebug, UiError, UiStack } from '@tokengator/ui'
@@ -23,17 +22,13 @@ export function UserDetailScreen({ user }: { user: User }) {
     <UiStack>
       <UiStack gap={0}>
         <UserUiCard user={user}>
-          <Title order={3}>Details</Title>
-
-          <UiStack>
-            {user.keypairs?.length && (
-              <UiStack>
-                {user.keypairs.map((keypair) => (
-                  <KeypairDetailScreen key={keypair.publicKey.toString()} keypair={keypair} />
-                ))}
-              </UiStack>
-            )}
-          </UiStack>
+          {user.keypairs?.length && (
+            <UiStack>
+              {user.keypairs.map((keypair) => (
+                <KeypairDetailScreen key={keypair.publicKey.toString()} keypair={keypair} />
+              ))}
+            </UiStack>
+          )}
         </UserUiCard>
       </UiStack>
       <UiDebug data={user} />

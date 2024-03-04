@@ -1,9 +1,9 @@
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
-import { AccountInfo, Connection, ParsedAccountData } from '@solana/web3.js'
+import { AccountInfo, Connection, ParsedAccountData, PublicKey } from '@solana/web3.js'
 import { Minter } from '@tokengator/minter'
 import { presetPayment } from '@tokengator/presets'
 
-export async function getPaymentHolders({ connection }: { connection: Connection }) {
+export async function getPaymentHolders({ connection }: { connection: Connection }): Promise<PaymentHolder[]> {
   const minter = new Minter({ ...presetPayment.config })
   const mint = minter.mint.publicKey.toString()
 
@@ -18,4 +18,9 @@ export async function getPaymentHolders({ connection }: { connection: Connection
         account: item.account as AccountInfo<ParsedAccountData>,
       }))
     })
+}
+
+export interface PaymentHolder {
+  pubkey: PublicKey
+  account: AccountInfo<ParsedAccountData>
 }

@@ -50,14 +50,16 @@ export function PresetDetailScreen({ preset }: { preset: Preset }) {
           </Tabs>
         </PresetUiCard>
         {preset.id === 'business-visa' ? (
-          <PresetApp preset={preset} />
+          <PresetApp preset={preset} minter={minter} />
         ) : query.isLoading ? (
           <UiLoader />
         ) : query.data ? (
           <UiStack>
-            <PresetApp preset={preset} />
+            <PresetApp preset={preset} minter={minter} mint={query.data} />
             <Group justify="flex-end">
               <Button
+                variant="light"
+                disabled={query.data.mintAuthority?.toString() !== keypair.publicKey}
                 loading={closeTokenMutation.isPending}
                 onClick={() => closeTokenMutation.mutateAsync().then(() => query.refetch())}
               >

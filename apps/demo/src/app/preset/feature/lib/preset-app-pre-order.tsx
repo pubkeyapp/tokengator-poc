@@ -1,10 +1,12 @@
 import { Accordion, Button, Group, Select, Table } from '@mantine/core'
+import { Mint } from '@solana/spl-token'
 import { useConnection } from '@solana/wallet-adapter-react'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { Minter } from '@tokengator/minter'
 import { getPreOrderHolders, mintPreOrder, Preset } from '@tokengator/presets'
 import { SampleUser as User, sampleUsers as users } from '@tokengator/sample-users'
-import { ellipsify, toastError, toastSuccess, UiLoader, UiStack, UiWarning } from '@tokengator/ui'
+import { ellipsify, toastError, toastSuccess, UiInfo, UiLoader, UiStack, UiWarning } from '@tokengator/ui'
 import { useState } from 'react'
 import { useKeypair } from '../../../keypair/data-access'
 
@@ -28,7 +30,7 @@ function useMintPreOrder({ feePayer }: { feePayer: Keypair }) {
   })
 }
 
-export function PresetAppPreOrder({ preset }: { preset: Preset }) {
+export function PresetAppPreOrder({ preset, minter, mint }: { preset: Preset; minter: Minter; mint: Mint }) {
   const query = useGetPreOrderHolders()
   return (
     <UiStack>
@@ -36,7 +38,7 @@ export function PresetAppPreOrder({ preset }: { preset: Preset }) {
         <Accordion.Item value="mint">
           <Accordion.Control>Mint Pre Order token</Accordion.Control>
           <Accordion.Panel>
-            <PresetAppPreOrderMint />
+            <PresetAppPreOrderMint mint={mint} />
           </Accordion.Panel>
         </Accordion.Item>
         <Accordion.Item value="holders">
@@ -89,10 +91,15 @@ export function PresetAppPreOrderHolders() {
   )
 }
 
-export function PresetAppPreOrderMint() {
+export function PresetAppPreOrderMint({ mint }: { mint: Mint }) {
   const { keypair } = useKeypair()
   const mutation = useMintPreOrder({ feePayer: keypair.solana as Keypair })
   const [user, setUser] = useState<User | undefined>()
+
+  if (mint.mintAuthority?.toString() !== keypair.publicKey) {
+    return <UiInfo message={`You are not the mint authority for this token`} />
+  }
+
   return (
     <UiStack>
       <Select
@@ -104,8 +111,8 @@ export function PresetAppPreOrderMint() {
       />
       <Group justify="flex-end">
         <Button
-          loading={mutation.isPending}
           disabled={!user}
+          loading={mutation.isPending}
           onClick={() => {
             const address = user?.keypairs.find((k) => k)?.publicKey
             if (!address) {

@@ -1,42 +1,23 @@
 import { Accordion, Button, Group, Select, Table } from '@mantine/core'
-import { useConnection } from '@solana/wallet-adapter-react'
-import { Keypair, PublicKey } from '@solana/web3.js'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { getPaymentHolders, mintPayment, Preset } from '@tokengator/presets'
+import { Mint } from '@solana/spl-token'
+import { Keypair } from '@solana/web3.js'
+import { Minter } from '@tokengator/minter'
+import { Preset } from '@tokengator/presets'
 import { SampleUser as User, sampleUsers as users } from '@tokengator/sample-users'
-import { ellipsify, toastError, toastSuccess, UiLoader, UiStack, UiWarning } from '@tokengator/ui'
+import { ellipsify, toastError, toastSuccess, UiInfo, UiLoader, UiStack, UiWarning } from '@tokengator/ui'
 import { useState } from 'react'
 import { useKeypair } from '../../../keypair/data-access'
+import { usePresetPayment } from '../../data-access/lib/preset-payment-provider'
+import { useMintPayment } from '../../data-access/lib/use-mint-payment'
 
-function useGetPaymentHolders() {
-  const { connection } = useConnection()
-  return useQuery({
-    queryKey: ['payment-holders'],
-    queryFn: async () => {
-      return getPaymentHolders({ connection })
-    },
-  })
-}
-
-function useMintPayment({ feePayer }: { feePayer: Keypair }) {
-  const { connection } = useConnection()
-  return useMutation({
-    mutationKey: ['mint-payment-holders'],
-    mutationFn: async (destination: PublicKey) => {
-      return mintPayment({ connection, destination, feePayer })
-    },
-  })
-}
-
-export function PresetAppPayment({ preset }: { preset: Preset }) {
-  const query = useGetPaymentHolders()
+export function PresetAppPayment({ preset, minter, mint }: { preset: Preset; minter: Minter; mint: Mint }) {
   return (
     <UiStack>
       <Accordion multiple variant="separated">
         <Accordion.Item value="mint">
           <Accordion.Control>Mint Payment token</Accordion.Control>
           <Accordion.Panel>
-            <PresetAppPaymentMint />
+            <PresetAppPaymentMint mint={mint} />
           </Accordion.Panel>
         </Accordion.Item>
         <Accordion.Item value="holders">
@@ -51,17 +32,17 @@ export function PresetAppPayment({ preset }: { preset: Preset }) {
 }
 
 export function PresetAppPaymentHolders() {
-  const query = useGetPaymentHolders()
+  const { holders, isLoading, refresh } = usePresetPayment()
   return (
     <UiStack>
       <Group justify="flex-end">
-        <Button variant="light" onClick={() => query.refetch()}>
+        <Button variant="light" onClick={refresh}>
           Refresh
         </Button>
       </Group>
-      {query.isLoading ? (
+      {isLoading ? (
         <UiLoader />
-      ) : query.data?.length ? (
+      ) : holders?.length ? (
         <UiStack>
           <Table>
             <Table.Thead>
@@ -72,7 +53,7 @@ export function PresetAppPaymentHolders() {
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
-              {query.data?.map((holder) => (
+              {holders?.map((holder) => (
                 <Table.Tr key={holder.pubkey.toBase58()}>
                   <Table.Td>{ellipsify(holder.account.data.parsed.info.owner)}</Table.Td>
                   <Table.Td>{holder.account.data.parsed.info.tokenAmount.uiAmountString}</Table.Td>
@@ -89,10 +70,15 @@ export function PresetAppPaymentHolders() {
   )
 }
 
-export function PresetAppPaymentMint() {
+export function PresetAppPaymentMint({ mint }: { mint: Mint }) {
+  const { refresh } = usePresetPayment()
   const { keypair } = useKeypair()
   const mutation = useMintPayment({ feePayer: keypair.solana as Keypair })
   const [user, setUser] = useState<User | undefined>()
+
+  if (mint.mintAuthority?.toString() !== keypair.publicKey) {
+    return <UiInfo message={`You are not the mint authority for this token`} />
+  }
   return (
     <UiStack>
       <Select
@@ -107,14 +93,19 @@ export function PresetAppPaymentMint() {
           loading={mutation.isPending}
           disabled={!user}
           onClick={() => {
-            const address = user?.keypairs.find((k) => k)?.publicKey
-            if (!address) {
+            const destination = user?.keypairs.find((k) => k)?.publicKey
+            if (!destination) {
+              return
+            }
+            const amount = window.prompt('Enter amount', '100')
+            if (!amount) {
               return
             }
 
             mutation
-              .mutateAsync(address)
+              .mutateAsync({ destination, amount: parseFloat(amount) })
               .then((res) => {
+                refresh()
                 toastSuccess(`Minted payment token: ${res}`)
               })
               .catch((err) => {
