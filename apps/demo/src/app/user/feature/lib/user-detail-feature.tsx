@@ -3,7 +3,8 @@ import { SampleUser as User, sampleUsers as users } from '@tokengator/sample-use
 
 import { UiDebug, UiError, UiStack } from '@tokengator/ui'
 import { useParams } from 'react-router-dom'
-import { UserUiCard, UserUiDetails } from '../../ui'
+import { KeypairDetailScreen } from '../../../keypair/feature/lib/keypair-detail-feature'
+import { UserUiCard } from '../../ui'
 
 export function UserDetailWrapper() {
   const { id } = useParams() as { id: string }
@@ -23,7 +24,16 @@ export function UserDetailScreen({ user }: { user: User }) {
       <UiStack gap={0}>
         <UserUiCard user={user}>
           <Title order={3}>Details</Title>
-          <UserUiDetails user={user} />
+
+          <UiStack>
+            {user.keypairs?.length && (
+              <UiStack>
+                {user.keypairs.map((keypair) => (
+                  <KeypairDetailScreen key={keypair.publicKey.toString()} keypair={keypair} />
+                ))}
+              </UiStack>
+            )}
+          </UiStack>
         </UserUiCard>
       </UiStack>
       <UiDebug data={user} />

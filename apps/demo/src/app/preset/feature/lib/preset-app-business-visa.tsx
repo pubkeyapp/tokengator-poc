@@ -2,11 +2,13 @@ import { Accordion, Button, Group, Select, Text } from '@mantine/core'
 import { useConnection } from '@solana/wallet-adapter-react'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { Minter } from '@tokengator/minter'
 import { getBusinessVisaHolders, getBusinessVisaPresets, mintBusinessVisa, Preset } from '@tokengator/presets'
 import { SampleUser as User, sampleUsers as users } from '@tokengator/sample-users'
 import { toastError, toastSuccess, UiLoader, UiStack, UiWarning } from '@tokengator/ui'
 import { useState } from 'react'
 import { useKeypair } from '../../../keypair/data-access'
+import { useCloseToken, useCreateToken, useGetTokenMint } from '../../data-access'
 import { PresetUiItem } from '../../ui'
 
 function useGetBusinessVisaHolders() {
@@ -62,9 +64,48 @@ export function PresetAppBusinessVisaPresets() {
   return (
     <UiStack>
       {presets?.map((preset) => (
-        <PresetUiItem preset={preset} key={preset.id} description={preset.config?.mint?.publicKey?.toString()} />
+        <PresetAppBusinessVisaPreset key={preset.id} preset={preset} />
       ))}
     </UiStack>
+  )
+}
+
+export function PresetAppBusinessVisaPreset({ preset }: { preset: Preset }) {
+  const [showDetails, setShowDetails] = useState(false)
+  return (
+    <PresetUiItem preset={preset} key={preset.id} description={preset.config?.mint?.publicKey?.toString()}>
+      <Group justify="flex-end">
+        <Button variant="light" size="xs" onClick={() => setShowDetails(!showDetails)}>
+          {showDetails ? 'Hide' : 'Show'} Details
+        </Button>
+      </Group>
+      {showDetails && <PresetAppBusinessVisaPresetDetail preset={preset} />}
+    </PresetUiItem>
+  )
+}
+
+export function PresetAppBusinessVisaPresetDetail({ preset }: { preset: Preset }) {
+  const { keypair } = useKeypair()
+  const minter = new Minter({ ...preset.config, feePayer: keypair.solana })
+  const query = useGetTokenMint({ minter })
+  const createTokenMutation = useCreateToken({ minter })
+  const closeTokenMutation = useCloseToken({ minter })
+
+  return query.isLoading ? (
+    <UiLoader />
+  ) : query.data ? (
+    <UiStack>
+      <Group justify="flex-end">
+        <Button
+          loading={closeTokenMutation.isPending}
+          onClick={() => closeTokenMutation.mutateAsync().then(() => query.refetch())}
+        >
+          Close Token
+        </Button>
+      </Group>
+    </UiStack>
+  ) : (
+    <Group justify="flex-end">Mint the Business Visa using the section below</Group>
   )
 }
 

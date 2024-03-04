@@ -1,4 +1,4 @@
-import { Button, Tabs } from '@mantine/core'
+import { Button, Group, Tabs } from '@mantine/core'
 import { Minter } from '@tokengator/minter'
 import { Preset, presets } from '@tokengator/presets'
 
@@ -49,14 +49,31 @@ export function PresetDetailScreen({ preset }: { preset: Preset }) {
             </Tabs.Panel>
           </Tabs>
         </PresetUiCard>
-        {query.isLoading ? (
+        {preset.id === 'business-visa' ? (
+          <PresetApp preset={preset} />
+        ) : query.isLoading ? (
           <UiLoader />
         ) : query.data ? (
-          <PresetApp preset={preset} />
-        ) : (
           <UiStack>
-            <Button onClick={() => createTokenMutation.mutateAsync().then(() => query.refetch())}>Create Token</Button>
+            <PresetApp preset={preset} />
+            <Group justify="flex-end">
+              <Button
+                loading={closeTokenMutation.isPending}
+                onClick={() => closeTokenMutation.mutateAsync().then(() => query.refetch())}
+              >
+                Close Token
+              </Button>
+            </Group>
           </UiStack>
+        ) : (
+          <Group justify="flex-end">
+            <Button
+              loading={createTokenMutation.isPending}
+              onClick={() => createTokenMutation.mutateAsync().then(() => query.refetch())}
+            >
+              Create Token
+            </Button>
+          </Group>
         )}
       </UiStack>
       <UiDebug data={preset} />

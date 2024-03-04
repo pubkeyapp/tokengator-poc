@@ -1,4 +1,5 @@
 import { Keypair as SolanaKeypair } from '@solana/web3.js'
+import { getFeePayer } from '@tokengator/presets'
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { createContext, ReactNode, useContext } from 'react'
@@ -18,7 +19,16 @@ export interface Keypair {
   solana?: SolanaKeypair
 }
 
-export const defaultKeypairs: Keypair[] = []
+const feePayer = getFeePayer()
+export const defaultKeypairs: Keypair[] = [
+  {
+    name: ellipsify(feePayer.publicKey.toString()),
+    publicKey: feePayer.publicKey.toString(),
+    secretKey: `[${feePayer.secretKey.join(',')}]`,
+    solana: feePayer,
+    active: true,
+  },
+]
 
 const keypairAtom = atomWithStorage<Keypair>('solana-keypair', defaultKeypairs[0])
 const keypairsAtom = atomWithStorage<Keypair[]>('solana-keypairs', defaultKeypairs)

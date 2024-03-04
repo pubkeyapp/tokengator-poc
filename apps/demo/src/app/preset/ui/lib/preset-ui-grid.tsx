@@ -6,7 +6,7 @@ import { PresetUiDetails } from './preset-ui-details'
 
 export function PresetUiGrid({ presets }: { presets: Preset[] }) {
   return presets.length ? (
-    <SimpleGrid cols={{ base: 0, lg: 3 }}>
+    <SimpleGrid cols={{ base: 0 }}>
       {presets?.map((item) => (
         <PresetUiCard key={item.id} preset={item} to={`/presets/${item.id}`}>
           <PresetUiDetails preset={item} />

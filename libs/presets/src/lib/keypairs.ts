@@ -1,3 +1,5 @@
+import { Keypair } from '@solana/web3.js'
+
 export const businessVisas = {
   BUSV2tiHQDWF1j7tidAsccBEvQUxQyxF7Sn4zYpbHhz9: [
     114, 5, 248, 222, 178, 231, 244, 161, 252, 35, 19, 162, 134, 118, 179, 228, 239, 90, 185, 228, 37, 106, 164, 176,
@@ -69,3 +71,14 @@ export const KEYPAIR_PRE = [
   90, 141, 71, 58, 171, 45, 197, 5, 190, 47, 204, 234, 197, 168, 134, 102, 190, 128, 75, 119, 98, 201, 68, 27, 248, 14,
   175, 207, 2, 20, 252, 124, 180, 185, 57, 80, 250, 145, 125,
 ]
+
+// FEESyimdmwzSQA99FqCVMn8rYYQdnRBguXh8AWdwJUcc
+export const FEE_PAYER = [
+  152, 222, 146, 61, 189, 252, 198, 154, 44, 101, 236, 177, 170, 27, 231, 52, 185, 128, 234, 101, 214, 247, 206, 97,
+  166, 183, 126, 170, 165, 179, 147, 21, 211, 103, 95, 129, 144, 43, 47, 17, 229, 174, 40, 46, 25, 82, 14, 6, 95, 118,
+  169, 245, 129, 172, 149, 69, 220, 91, 111, 240, 248, 63, 102, 37,
+]
+
+export function getFeePayer() {
+  return Keypair.fromSecretKey(Uint8Array.from(FEE_PAYER))
+}

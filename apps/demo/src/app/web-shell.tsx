@@ -1,6 +1,6 @@
 import { IconBrandGithub, IconBrandX } from '@tabler/icons-react'
 import { UiNotFound } from '@tokengator/ui'
-import { useRoutes } from 'react-router-dom'
+import { Navigate, useRoutes } from 'react-router-dom'
 import { AccountFeature } from './account/feature'
 import { AppLayout } from './app-layout'
 import { ClusterFeature } from './cluster/feature'
@@ -35,6 +35,7 @@ export function WebShell() {
 
 export function AppRoutes() {
   return useRoutes([
+    { index: true, element: <Navigate to="/presets" replace /> },
     { path: '/presets/*', element: <PresetFeature /> },
     { path: '/accounts/*', element: <AccountFeature /> },
     { path: '/clusters/*', element: <ClusterFeature /> },
