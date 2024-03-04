@@ -11,49 +11,36 @@ import {
   Table,
   Text,
   TextInput,
-} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+} from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
 
-import { useConnection } from '@solana/wallet-adapter-react';
-import {
-  IconExternalLink,
-  IconNetwork,
-  IconNetworkOff,
-  IconTrash,
-} from '@tabler/icons-react';
-import { useQuery } from '@tanstack/react-query';
-import { UiCopy, UiStack, UiWarning } from '@tokengator/ui';
+import { useConnection } from '@solana/wallet-adapter-react'
+import { IconExternalLink, IconNetwork, IconNetworkOff, IconTrash } from '@tabler/icons-react'
+import { useQuery } from '@tanstack/react-query'
+import { UiCopy, UiStack, UiWarning } from '@tokengator/ui'
 
-import { ReactNode, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Cluster, ClusterNetwork, useCluster } from '../../data-access';
+import { ReactNode, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Cluster, ClusterNetwork, useCluster } from '../../data-access'
 
 export function ExplorerLink({
   copy,
   path,
   label = 'View on Explorer',
   ...props
-}: { path: string; copy?: string; label?: string } & AnchorProps) {
-  const { getExplorerUrl } = useCluster();
+}: { path: string; copy?: string; label?: ReactNode } & AnchorProps) {
+  const { getExplorerUrl } = useCluster()
   return (
     <Group align="start" gap={4} wrap="nowrap">
       {copy ? <UiCopy text={copy} /> : null}
-      <Anchor
-        href={getExplorerUrl(path)}
-        target="_blank"
-        rel="noopener noreferrer"
-        {...props}
-      >
+      <Anchor href={getExplorerUrl(path)} target="_blank" rel="noopener noreferrer" {...props}>
         {label}
       </Anchor>
     </Group>
-  );
+  )
 }
-export function ExplorerIcon({
-  path,
-  ...props
-}: { path: string; label?: string } & ActionIconProps) {
-  const { getExplorerUrl } = useCluster();
+export function ExplorerIcon({ path, ...props }: { path: string; label?: string } & ActionIconProps) {
+  const { getExplorerUrl } = useCluster()
   return (
     <ActionIcon
       title="View on Explorer"
@@ -67,19 +54,13 @@ export function ExplorerIcon({
     >
       <IconExternalLink size={16} />
     </ActionIcon>
-  );
+  )
 }
 
 export function ClusterUiSelect() {
-  const { clusters, setCluster, cluster } = useCluster();
+  const { clusters, setCluster, cluster } = useCluster()
 
-  return (
-    <ClusterUiSelectMenu
-      clusters={clusters}
-      setCluster={setCluster}
-      cluster={cluster}
-    />
-  );
+  return <ClusterUiSelectMenu clusters={clusters} setCluster={setCluster} cluster={cluster} />
 }
 
 export function ClusterUiSelectMenu({
@@ -87,14 +68,14 @@ export function ClusterUiSelectMenu({
   setCluster,
   cluster,
 }: {
-  clusters: Cluster[];
-  setCluster: (cluster: Cluster) => void;
-  cluster: Cluster;
+  clusters: Cluster[]
+  setCluster: (cluster: Cluster) => void
+  cluster: Cluster
 }) {
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
-        <Button>{cluster.name}</Button>
+        <Button variant="light">{cluster.name}</Button>
       </Menu.Target>
 
       <Menu.Dropdown>
@@ -113,20 +94,20 @@ export function ClusterUiSelectMenu({
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
-  );
+  )
 }
 
 export function ClusterChecker({ children }: { children: ReactNode }) {
-  const { cluster } = useCluster();
-  const { connection } = useConnection();
+  const { cluster } = useCluster()
+  const { connection } = useConnection()
 
   const query = useQuery({
     queryKey: ['version', { cluster, endpoint: connection.rpcEndpoint }],
     queryFn: () => connection.getVersion(),
     retry: 1,
-  });
+  })
   if (query.isLoading) {
-    return null;
+    return null
   }
   if (query.isError || !query.data) {
     return (
@@ -143,40 +124,30 @@ export function ClusterChecker({ children }: { children: ReactNode }) {
             <Text>
               Error connecting to cluster <strong>{cluster.name}</strong>
             </Text>
-            <Button
-              variant="light"
-              color="yellow"
-              size="xs"
-              onClick={() => query.refetch()}
-            >
+            <Button variant="light" color="yellow" size="xs" onClick={() => query.refetch()}>
               Refresh
             </Button>
           </Group>
         }
       />
-    );
+    )
   }
-  return children;
+  return children
 }
 
 export function ClusterUiModal() {
-  const { addCluster } = useCluster();
-  const [opened, { close, open }] = useDisclosure(false);
-  const [name, setName] = useState('');
-  const [network, setNetwork] = useState<ClusterNetwork | undefined>();
-  const [endpoint, setEndpoint] = useState('');
+  const { addCluster } = useCluster()
+  const [opened, { close, open }] = useDisclosure(false)
+  const [name, setName] = useState('')
+  const [network, setNetwork] = useState<ClusterNetwork | undefined>()
+  const [endpoint, setEndpoint] = useState('')
 
   return (
     <>
       <Button onClick={open}>Add Cluster</Button>
       <Modal opened={opened} onClose={close} title="Add Cluster">
         <UiStack>
-          <TextInput
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <TextInput type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
           <TextInput
             type="text"
             placeholder="Endpoint"
@@ -196,8 +167,8 @@ export function ClusterUiModal() {
           <Group>
             <Button
               onClick={() => {
-                addCluster({ name, network, endpoint });
-                close();
+                addCluster({ name, network, endpoint })
+                close()
               }}
             >
               Save
@@ -206,11 +177,11 @@ export function ClusterUiModal() {
         </UiStack>
       </Modal>
     </>
-  );
+  )
 }
 
 export function ClusterUiTable() {
-  const { clusters, setCluster, deleteCluster } = useCluster();
+  const { clusters, setCluster, deleteCluster } = useCluster()
   return (
     <div>
       <Table>
@@ -228,11 +199,7 @@ export function ClusterUiTable() {
                   {item?.active ? (
                     item.name
                   ) : (
-                    <Anchor
-                      component="button"
-                      title="Select cluster"
-                      onClick={() => setCluster(item)}
-                    >
+                    <Anchor component="button" title="Select cluster" onClick={() => setCluster(item)}>
                       {item.name}
                     </Anchor>
                   )}
@@ -244,8 +211,8 @@ export function ClusterUiTable() {
                 <Button
                   disabled={item?.active}
                   onClick={() => {
-                    if (!window.confirm('Are you sure?')) return;
-                    deleteCluster(item);
+                    if (!window.confirm('Are you sure?')) return
+                    deleteCluster(item)
                   }}
                 >
                   <IconTrash size={16} />
@@ -256,5 +223,5 @@ export function ClusterUiTable() {
         </Table.Tbody>
       </Table>
     </div>
-  );
+  )
 }

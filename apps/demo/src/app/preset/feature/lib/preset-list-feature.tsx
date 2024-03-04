@@ -14,7 +14,7 @@ export function PresetListFeature() {
         }
       >
         <UiStack>
-          <Text>We have {presets.length} presets that show various types of tokens.</Text>
+          <Text>There are {presets.length} presets that show various types of tokens.</Text>
         </UiStack>
       </UiCard>
       <PresetUiGrid presets={presets} />

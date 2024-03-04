@@ -1,6 +1,6 @@
-import { ActionIcon, Group } from '@mantine/core'
+import { ActionIcon, Flex, Group, Tooltip } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { UiContainer, UiHeader, UiHeaderLink, UiLayout } from '@tokengator/ui'
+import { UiContainer, UiHeader, UiHeaderLink, UiLayout, UiLogoTypePubKey } from '@tokengator/ui'
 
 import { ReactNode } from 'react'
 import { ClusterChecker, ClusterUiSelect } from './cluster/ui'
@@ -18,6 +18,22 @@ export function AppLayout({
   const [opened, { toggle }] = useDisclosure(false)
   return (
     <UiLayout
+      footer={
+        <Flex h="100%" justify="space-between" align="center" px="md">
+          <Tooltip label="This is a 🅿️ PubKey Product! ">
+            <Group>
+              <UiLogoTypePubKey height={28} />
+            </Group>
+          </Tooltip>
+          <Group>
+            {icons.map(({ href, icon }) => (
+              <ActionIcon key={href} variant="light" size="lg" component="a" href={href} target="_blank">
+                {icon}
+              </ActionIcon>
+            ))}
+          </Group>
+        </Flex>
+      }
       header={
         <UiHeader
           opened={opened}
@@ -28,11 +44,6 @@ export function AppLayout({
               <KeypairUiBalance />
               <KeypairUiSelect />
               <ClusterUiSelect />
-              {icons.map(({ href, icon }) => (
-                <ActionIcon key={href} variant="light" size="lg" component="a" href={href} target="_blank">
-                  {icon}
-                </ActionIcon>
-              ))}
             </Group>
           }
         />

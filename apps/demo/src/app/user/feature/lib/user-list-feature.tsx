@@ -14,7 +14,7 @@ export function UserListFeature() {
         }
       >
         <UiStack>
-          <Text>We have {users.length} users that show various types of tokens.</Text>
+          <Text>There are {users.length} example users that are used in the demo.</Text>
         </UiStack>
       </UiCard>
       <UserUiGrid users={users} />

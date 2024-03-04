@@ -5,6 +5,7 @@ import {
   createInitializeMintCloseAuthorityInstruction,
   createInitializeMintInstruction,
   createInitializeNonTransferableMintInstruction,
+  createUpdateFieldInstruction,
   Mint,
 } from '@solana/spl-token'
 import {
@@ -142,6 +143,18 @@ export function createTokenInstructions({
         uri: metadata.uri, // URI of the token
       }),
     )
+
+    for (const [field, value] of metadata.additionalMetadata ?? []) {
+      ix.push(
+        createUpdateFieldInstruction({
+          programId,
+          metadata: mintPublicKey,
+          updateAuthority: metadata.updateAuthority ?? feePayerPublicKey,
+          field,
+          value,
+        }),
+      )
+    }
   }
 
   return ix

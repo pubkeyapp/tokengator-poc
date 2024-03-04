@@ -7,6 +7,7 @@ import { SampleUser as User, sampleUsers as users } from '@tokengator/sample-use
 import { ellipsify, toastError, toastSuccess, UiInfo, UiLoader, UiStack, UiWarning } from '@tokengator/ui'
 import { useState } from 'react'
 import { useKeypair } from '../../../keypair/data-access'
+import { AppLabelLink } from '../../../labels-provider'
 import { usePresetPayment } from '../../data-access/lib/preset-payment-provider'
 import { useMintPayment } from '../../data-access/lib/use-mint-payment'
 
@@ -55,7 +56,9 @@ export function PresetAppPaymentHolders() {
             <Table.Tbody>
               {holders?.map((holder) => (
                 <Table.Tr key={holder.pubkey.toBase58()}>
-                  <Table.Td>{ellipsify(holder.account.data.parsed.info.owner)}</Table.Td>
+                  <Table.Td>
+                    <AppLabelLink publicKey={holder.account.data.parsed.info.owner} />
+                  </Table.Td>
                   <Table.Td>{holder.account.data.parsed.info.tokenAmount.uiAmountString}</Table.Td>
                   <Table.Td>{ellipsify(holder.pubkey.toBase58())}</Table.Td>
                 </Table.Tr>
@@ -93,7 +96,7 @@ export function PresetAppPaymentMint({ mint }: { mint: Mint }) {
           loading={mutation.isPending}
           disabled={!user}
           onClick={() => {
-            const destination = user?.keypairs.find((k) => k)?.publicKey
+            const destination = user?.keypair.publicKey
             if (!destination) {
               return
             }

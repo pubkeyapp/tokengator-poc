@@ -9,7 +9,7 @@ import './ui-theme-styles'
 
 const theme = createTheme({
   colors: {
-    brand: DEFAULT_THEME.colors.blue,
+    brand: DEFAULT_THEME.colors.green,
   },
   primaryColor: 'brand',
 })

@@ -7,7 +7,7 @@ import { sampleUserDave } from './sample-user-dave'
 export interface SampleUser {
   id: string
   name: string
-  keypairs: Keypair[]
+  keypair: Keypair
 }
 
 export const sampleUsers: SampleUser[] = [sampleUserAlice, sampleUserBob, sampleUserCharlie, sampleUserDave]

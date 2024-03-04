@@ -1,4 +1,4 @@
-import { IconDashboard, IconWallet } from '@tabler/icons-react'
+import { IconCube, IconDashboard } from '@tabler/icons-react'
 import { presets } from '@tokengator/presets'
 import { UiGroup, UiStack } from '@tokengator/ui'
 
@@ -17,7 +17,7 @@ export default function PresetRoutes() {
     ...presets.map(({ name: label, id: path }) => ({
       label: <UiGroup>{label}</UiGroup>,
       path,
-      leftSection: <IconWallet size={16} />,
+      leftSection: <IconCube size={16} />,
     })),
   ]
   const routes = useRoutes([

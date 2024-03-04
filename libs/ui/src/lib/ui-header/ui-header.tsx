@@ -1,7 +1,7 @@
 import { Anchor, Burger, Drawer, DrawerProps, Group, ScrollArea, Stack } from '@mantine/core'
-import { ReactNode } from 'react'
-import cx from 'clsx'
 import { useDisclosure } from '@mantine/hooks'
+import cx from 'clsx'
+import { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { UiLogo, UiLogoType } from '../ui-logo'
 
@@ -53,7 +53,7 @@ export function UiHeader(props: UiHeaderProps) {
           <Group>
             {burger}
             <Anchor component={Link} to={props.base ?? '/'} display="flex">
-              <Group hiddenFrom="md">{props.logoSmall ?? <UiLogo height={28} />}</Group>
+              <Group hiddenFrom="md">{props.logoSmall ?? <UiLogo height={42} />}</Group>
               <Group visibleFrom="md">{props.logo ?? <UiLogoType height={28} />}</Group>
             </Anchor>
           </Group>

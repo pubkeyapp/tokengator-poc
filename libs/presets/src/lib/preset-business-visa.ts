@@ -36,7 +36,7 @@ export const presetBusinessVisa: Preset = {
       name: 'OPOS Business Visa',
       symbol: 'BUS',
       additionalMetadata: [
-        ['status', 'active'],
+        ['status', 'active.'],
         ['expiresAt', new Date(daysFromNow(14)).toISOString()],
       ],
     },
@@ -44,7 +44,7 @@ export const presetBusinessVisa: Preset = {
   },
 }
 
-function daysFromNow(days: number) {
+export function daysFromNow(days: number) {
   const now = new Date()
   now.setDate(now.getDate() + days)
   return now.toISOString().split('T')[0]

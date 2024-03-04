@@ -1,31 +1,31 @@
-import { Button, Group, Menu, Modal, Text, TextInput } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { Button, Group, Menu, Modal, Text, TextInput } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
 
-import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { IconUserOff, IconWallet, IconWalletOff } from '@tabler/icons-react';
-import { UiStack, UiWarning } from '@tokengator/ui';
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
+import { IconUserOff, IconWallet, IconWalletOff } from '@tabler/icons-react'
+import { UiStack, UiWarning } from '@tokengator/ui'
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useGetBalance, useRequestAirdrop } from '../../../account/data-access';
-import { formatAmount } from '../../../account/ui';
-import { useCluster } from '../../../cluster/data-access';
-import { useKeypair } from '../../data-access';
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useGetBalance, useRequestAirdrop } from '../../../account/data-access'
+import { formatAmount } from '../../../account/ui'
+import { useCluster } from '../../../cluster/data-access'
+import { useKeypair } from '../../data-access'
 
 export function KeypairChecker() {
-  const { keypair } = useKeypair();
+  const { keypair } = useKeypair()
   if (!keypair.solana?.publicKey) {
-    return null;
+    return null
   }
-  return <KeypairBalanceCheck address={keypair.solana.publicKey} />;
+  return <KeypairBalanceCheck address={keypair.solana.publicKey} />
 }
 export function KeypairBalanceCheck({ address }: { address: PublicKey }) {
-  const { cluster } = useCluster();
-  const query = useGetBalance({ address });
-  const requestAirdrop = useRequestAirdrop({ address });
+  const { cluster } = useCluster()
+  const query = useGetBalance({ address })
+  const requestAirdrop = useRequestAirdrop({ address })
 
   if (query.isLoading) {
-    return null;
+    return null
   }
   if (query.isError || !query.data) {
     return (
@@ -39,49 +39,41 @@ export function KeypairBalanceCheck({ address }: { address: PublicKey }) {
         message={
           <Group justify="center">
             <Text>
-              You are connected to <strong>{cluster.name}</strong> but your
-              account is not found on this cluster.
+              You are connected to <strong>{cluster.name}</strong> but your account is not found on this cluster.
             </Text>
             <Button
               variant="light"
               color="yellow"
               size="xs"
-              onClick={() =>
-                requestAirdrop.mutateAsync('1').catch((err) => console.log(err))
-              }
+              onClick={() => requestAirdrop.mutateAsync('1').catch((err) => console.log(err))}
             >
               Request Airdrop
             </Button>
           </Group>
         }
       />
-    );
+    )
   }
-  return null;
+  return null
 }
 
 export function KeypairUiModal() {
-  const { importKeypair } = useKeypair();
-  const [opened, { close, open }] = useDisclosure(false);
-  const [secret, setSecret] = useState('');
+  const { importKeypair } = useKeypair()
+  const [opened, { close, open }] = useDisclosure(false)
+  const [secret, setSecret] = useState('')
 
   return (
     <>
       <Button onClick={open}>Add Keypair</Button>
       <Modal opened={opened} onClose={close} title="Add Keypair">
         <UiStack>
-          <TextInput
-            type="text"
-            placeholder="Name"
-            value={secret}
-            onChange={(e) => setSecret(e.target.value)}
-          />
+          <TextInput type="text" placeholder="Name" value={secret} onChange={(e) => setSecret(e.target.value)} />
 
           <Group justify="end">
             <Button
               onClick={() => {
-                importKeypair(secret);
-                close();
+                importKeypair(secret)
+                close()
               }}
             >
               Save
@@ -90,16 +82,16 @@ export function KeypairUiModal() {
         </UiStack>
       </Modal>
     </>
-  );
+  )
 }
 
 export function KeypairUiSelect() {
-  const { keypairs, setKeypair, keypair } = useKeypair();
+  const { keypairs, setKeypair, keypair } = useKeypair()
 
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
-        <Button>{keypair.name}</Button>
+        <Button variant="light">{keypair.name}</Button>
       </Menu.Target>
 
       <Menu.Dropdown>
@@ -118,25 +110,21 @@ export function KeypairUiSelect() {
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
-  );
+  )
 }
 export function KeypairUiBalance() {
-  const { keypair } = useKeypair();
+  const { keypair } = useKeypair()
 
   return keypair.publicKey ? (
-    <Button component={Link} to={`/accounts/${keypair.publicKey}`}>
+    <Button variant="light" component={Link} to={`/accounts/${keypair.publicKey}`}>
       <KeypairSelectLabel address={keypair.publicKey} />
     </Button>
-  ) : null;
+  ) : null
 }
 
 function KeypairSelectLabel({ address }: { address: string }) {
-  const query = useGetBalance({ address: new PublicKey(address) });
-  const value = query.isLoading
-    ? '...'
-    : query.data
-    ? formatAmount(query.data / LAMPORTS_PER_SOL, 5)
-    : '?';
+  const query = useGetBalance({ address: new PublicKey(address) })
+  const value = query.isLoading ? '...' : query.data ? formatAmount(query.data / LAMPORTS_PER_SOL, 5) : '?'
 
-  return `${value} SOL`;
+  return `${value} SOL`
 }

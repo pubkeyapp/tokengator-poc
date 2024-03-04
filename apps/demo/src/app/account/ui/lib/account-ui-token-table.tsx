@@ -1,31 +1,31 @@
-import { ActionIcon, Button, Group, Loader, Table, Text } from '@mantine/core';
-import { PublicKey } from '@solana/web3.js';
-import { IconRefresh } from '@tabler/icons-react';
-import { useQueryClient } from '@tanstack/react-query';
-import { ellipsify, UiError, UiInfo, UiStack } from '@tokengator/ui';
-import { useMemo, useState } from 'react';
-import { ExplorerLink } from '../../../cluster/ui';
-import { useGetTokenAccounts } from '../../data-access';
-import { formatAmount } from './account-ui-form-send';
-import { AccountUiTokenActions } from './account-ui-token-actions';
-import { AccountUiTokenBalance } from './account-ui-token-balance';
+import { ActionIcon, Button, Group, Loader, Table, Text } from '@mantine/core'
+import { PublicKey } from '@solana/web3.js'
+import { IconRefresh } from '@tabler/icons-react'
+import { useQueryClient } from '@tanstack/react-query'
+import { ellipsify, UiError, UiInfo, UiStack } from '@tokengator/ui'
+import { useMemo, useState } from 'react'
+import { ExplorerLink } from '../../../cluster/ui'
+import { AppLabel } from '../../../labels-provider'
+import { useGetTokenAccounts } from '../../data-access'
+import { formatAmount } from './account-ui-form-send'
+import { AccountUiTokenActions } from './account-ui-token-actions'
 
 export interface AccountUiTokenBurnInput {
-  amount: string;
-  source: string;
-  mint: string;
+  amount: string
+  source: string
+  mint: string
 }
 
 export interface AccountUiTokenCloseInput {
-  source: string;
-  mint: string;
+  source: string
+  mint: string
 }
 
 export interface AccountUiTokenSendInput {
-  amount: string;
-  source: string;
-  destination: string;
-  mint: string;
+  amount: string
+  source: string
+  destination: string
+  mint: string
 }
 
 export function AccountUiTokenTable({
@@ -34,31 +34,31 @@ export function AccountUiTokenTable({
   close,
   send,
 }: {
-  address: PublicKey;
-  burn?: (input: AccountUiTokenBurnInput) => Promise<void>;
-  close?: (input: AccountUiTokenCloseInput) => Promise<void>;
-  send?: (input: AccountUiTokenSendInput) => Promise<void>;
+  address: PublicKey
+  burn?: (input: AccountUiTokenBurnInput) => Promise<void>
+  close?: (input: AccountUiTokenCloseInput) => Promise<void>
+  send?: (input: AccountUiTokenSendInput) => Promise<void>
 }) {
-  const [showAll, setShowAll] = useState(false);
-  const query = useGetTokenAccounts({ address });
-  const client = useQueryClient();
+  const [showAll, setShowAll] = useState(false)
+  const query = useGetTokenAccounts({ address })
+  const client = useQueryClient()
   const items = useMemo(() => {
-    if (showAll) return query.data;
+    if (showAll) return query.data
     return query.data
       ?.slice(0, 5)
       .sort((a, b) => {
-        const aMint = a.account.data.parsed.info.mint;
-        const bMint = b.account.data.parsed.info.mint;
-        if (aMint < bMint) return -1;
-        if (aMint > bMint) return 1;
-        return 0;
+        const aMint = a.account.data.parsed.info.mint
+        const bMint = b.account.data.parsed.info.mint
+        if (aMint < bMint) return -1
+        if (aMint > bMint) return 1
+        return 0
       })
       .sort((a, b) => {
-        const aBalance = a.account.data.parsed.info.tokenAmount.uiAmount;
-        const bBalance = b.account.data.parsed.info.tokenAmount.uiAmount;
-        return bBalance - aBalance;
-      });
-  }, [query.data, showAll]);
+        const aBalance = a.account.data.parsed.info.tokenAmount.uiAmount
+        const bBalance = b.account.data.parsed.info.tokenAmount.uiAmount
+        return bBalance - aBalance
+      })
+  }, [query.data, showAll])
 
   return (
     <div>
@@ -72,10 +72,10 @@ export function AccountUiTokenTable({
               <ActionIcon
                 variant="outline"
                 onClick={async () => {
-                  await query.refetch();
+                  await query.refetch()
                   await client.invalidateQueries({
                     queryKey: ['getTokenBalance'],
-                  });
+                  })
                 }}
               >
                 <IconRefresh size={16} />
@@ -83,12 +83,7 @@ export function AccountUiTokenTable({
             )}
           </Group>
         </Group>
-        {query.isError && (
-          <UiError
-            title={'An error occurred'}
-            message={`Error: ${query.error?.message.toString()}`}
-          />
-        )}
+        {query.isError && <UiError title={'An error occurred'} message={`Error: ${query.error?.message.toString()}`} />}
 
         {query.isSuccess && (
           <div>
@@ -116,7 +111,7 @@ export function AccountUiTokenTable({
                         <ExplorerLink
                           copy={account.data.parsed.info.mint.toString()}
                           ff="monospace"
-                          label={ellipsify(account.data.parsed.info.mint)}
+                          label={<AppLabel publicKey={account.data.parsed.info.mint} />}
                           path={`account/${account.data.parsed.info.mint.toString()}`}
                         />
                       </Table.Td>
@@ -130,40 +125,35 @@ export function AccountUiTokenTable({
                       </Table.Td>
                       <Table.Td align="right">
                         <Text ff="monospace">
-                          {formatAmount(
-                            account.data.parsed.info.tokenAmount
-                              .uiAmountString ?? '0'
-                          )}
+                          {formatAmount(account.data.parsed.info.tokenAmount.uiAmountString ?? '0')}
                         </Text>
                       </Table.Td>
                       <Table.Td align="right">
                         <AccountUiTokenActions
                           burn={async (input) => {
-                            if (!burn) return;
+                            if (!burn) return
                             return burn({
                               ...input,
                               mint: account.data.parsed.info.mint,
                               source: pubkey.toString(),
-                            });
+                            })
                           }}
                           close={async () => {
-                            if (!close) return;
+                            if (!close) return
                             return close({
                               mint: account.data.parsed.info.mint,
                               source: pubkey.toString(),
-                            });
+                            })
                           }}
                           send={async (input) => {
-                            if (!send) return;
+                            if (!send) return
                             return send({
                               ...input,
                               mint: account.data.parsed.info.mint,
                               source: pubkey.toString(),
-                            });
+                            })
                           }}
-                          available={
-                            account.data.parsed.info.tokenAmount.uiAmount
-                          }
+                          available={account.data.parsed.info.tokenAmount.uiAmount}
                           mint={account.data.parsed.info.mint}
                         />
                       </Table.Td>
@@ -173,9 +163,7 @@ export function AccountUiTokenTable({
                   {(query.data?.length ?? 0) > 5 && (
                     <Table.Tr>
                       <Table.Td colSpan={4} align="center">
-                        <Button onClick={() => setShowAll(!showAll)}>
-                          {showAll ? 'Show Less' : 'Show All'}
-                        </Button>
+                        <Button onClick={() => setShowAll(!showAll)}>{showAll ? 'Show Less' : 'Show All'}</Button>
                       </Table.Td>
                     </Table.Tr>
                   )}
@@ -186,5 +174,5 @@ export function AccountUiTokenTable({
         )}
       </UiStack>
     </div>
-  );
+  )
 }

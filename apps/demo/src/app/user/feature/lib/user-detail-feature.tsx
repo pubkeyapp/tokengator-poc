@@ -22,13 +22,9 @@ export function UserDetailScreen({ user }: { user: User }) {
     <UiStack>
       <UiStack gap={0}>
         <UserUiCard user={user}>
-          {user.keypairs?.length && (
-            <UiStack>
-              {user.keypairs.map((keypair) => (
-                <KeypairDetailScreen key={keypair.publicKey.toString()} keypair={keypair} />
-              ))}
-            </UiStack>
-          )}
+          <UiStack>
+            <KeypairDetailScreen key={user.keypair.publicKey.toString()} keypair={user.keypair} />
+          </UiStack>
         </UserUiCard>
       </UiStack>
       <UiDebug data={user} />

@@ -3,10 +3,12 @@ import { Minter, mintTokens } from '@tokengator/minter'
 import { presetPreOrder } from '@tokengator/presets'
 
 export async function mintPreOrder({
+  amount,
   destination,
   connection,
   feePayer,
 }: {
+  amount: number
   destination: PublicKey
   connection: Connection
   feePayer: Keypair
@@ -14,7 +16,7 @@ export async function mintPreOrder({
   const minter = new Minter({ ...presetPreOrder.config, feePayer })
 
   return mintTokens({
-    amount: 1,
+    amount,
     connection,
     destination,
     minter,

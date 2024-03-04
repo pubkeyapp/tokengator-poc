@@ -40,7 +40,10 @@ export function getBusinessVisaPresets(): Preset[] {
   }))
 }
 
-export async function getFirstFreeBusinessVisa({ connection }: { connection: Connection }) {
+export async function getFirstFreeBusinessVisa({ connection }: { connection: Connection }): Promise<{
+  count: number
+  mint?: Keypair
+}> {
   const mintList = getBusinessVisaMintList()
   // We are looking for the first mint that has no holders
   for (let i = 0; i < mintList.length; i++) {
@@ -50,8 +53,10 @@ export async function getFirstFreeBusinessVisa({ connection }: { connection: Con
       filters: [{ memcmp: { offset: 0, bytes: mint } }],
     })
     if (!holders.length) {
-      return Keypair.fromSecretKey(Uint8Array.from(businessVisas[mint as keyof typeof businessVisas]))
+      const keypair = Keypair.fromSecretKey(Uint8Array.from(businessVisas[mint as keyof typeof businessVisas]))
+
+      return { count: holders.length, mint: keypair }
     }
   }
-  return undefined
+  return { count: 0, mint: undefined }
 }

@@ -3,6 +3,7 @@ import { Minter } from '@tokengator/minter'
 import { Preset } from '@tokengator/presets'
 import { UiError } from '@tokengator/ui'
 import { PresetPaymentProvider } from '../../data-access/lib/preset-payment-provider'
+import { PresetPreOrderProvider } from '../../data-access/lib/preset-pre-order-provider'
 import { PresetAppBusinessVisa } from './preset-app-business-visa'
 import { PresetAppPayment } from './preset-app-payment'
 import { PresetAppPreOrder } from './preset-app-pre-order'
@@ -20,7 +21,13 @@ export function PresetApp({ preset, minter, mint }: { preset: Preset; minter: Mi
         )
       )
     case 'pre-order':
-      return mint && <PresetAppPreOrder preset={preset} minter={minter} mint={mint} />
+      return (
+        mint && (
+          <PresetPreOrderProvider mint={mint}>
+            <PresetAppPreOrder preset={preset} minter={minter} mint={mint} />
+          </PresetPreOrderProvider>
+        )
+      )
     default:
       return <UiError message={`Preset app not found: ${preset.id}`} />
   }

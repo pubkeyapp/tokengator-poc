@@ -1,5 +1,5 @@
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
-import { Connection } from '@solana/web3.js'
+import { AccountInfo, Connection, ParsedAccountData } from '@solana/web3.js'
 import { getTokenMint } from './get-token-mint'
 import { Minter } from './minter'
 
@@ -10,8 +10,15 @@ export async function getTokenHolders({ connection, minter }: { connection: Conn
 
   const mint = await getTokenMint({ connection, minter })
 
-  return connection.getParsedProgramAccounts(TOKEN_2022_PROGRAM_ID, {
-    commitment: 'confirmed',
-    filters: [{ memcmp: { offset: 0, bytes: mint.address.toString() } }],
-  })
+  return connection
+    .getParsedProgramAccounts(TOKEN_2022_PROGRAM_ID, {
+      commitment: 'confirmed',
+      filters: [{ memcmp: { offset: 0, bytes: mint.address.toString() } }],
+    })
+    .then((items) =>
+      items.map((item) => ({
+        ...item,
+        account: item.account as AccountInfo<ParsedAccountData>,
+      })),
+    )
 }

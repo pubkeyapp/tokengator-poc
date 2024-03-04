@@ -2,7 +2,7 @@ import { Button, Group, Tabs } from '@mantine/core'
 import { Minter } from '@tokengator/minter'
 import { Preset, presets } from '@tokengator/presets'
 
-import { UiDebug, UiError, UiLoader, UiStack } from '@tokengator/ui'
+import { UiDebugModal, UiError, UiLoader, UiStack } from '@tokengator/ui'
 import { useParams } from 'react-router-dom'
 import { useKeypair } from '../../../keypair/data-access'
 import { useCloseToken, useCreateToken, useGetTokenMint } from '../../data-access'
@@ -55,11 +55,11 @@ export function PresetDetailScreen({ preset }: { preset: Preset }) {
           <UiLoader />
         ) : query.data ? (
           <UiStack>
-            <PresetApp preset={preset} minter={minter} mint={query.data} />
+            <PresetApp preset={preset} minter={minter} mint={query.data.mint} />
             <Group justify="flex-end">
               <Button
                 variant="light"
-                disabled={query.data.mintAuthority?.toString() !== keypair.publicKey}
+                disabled={query.data.mint.mintAuthority?.toString() !== keypair.publicKey}
                 loading={closeTokenMutation.isPending}
                 onClick={() => closeTokenMutation.mutateAsync().then(() => query.refetch())}
               >
@@ -78,7 +78,7 @@ export function PresetDetailScreen({ preset }: { preset: Preset }) {
           </Group>
         )}
       </UiStack>
-      <UiDebug data={preset} />
+      <UiDebugModal data={preset} />
     </UiStack>
   )
 }

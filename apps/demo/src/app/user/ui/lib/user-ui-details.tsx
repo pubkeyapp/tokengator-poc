@@ -5,13 +5,11 @@ import { UiStack } from '@tokengator/ui'
 export function UserUiDetails({ user }: { user: User }) {
   return (
     <UiStack>
-      {user.keypairs?.length && (
+      {user.keypair && (
         <List listStyleType="none" spacing="sm">
-          {user.keypairs.map(({ publicKey }) => (
-            <List.Item key={publicKey.toString()}>
-              <Code>{publicKey.toString()}</Code>
-            </List.Item>
-          ))}
+          <List.Item key={user.keypair.publicKey.toString()}>
+            <Code>{user.keypair.publicKey.toString()}</Code>
+          </List.Item>
         </List>
       )}
     </UiStack>

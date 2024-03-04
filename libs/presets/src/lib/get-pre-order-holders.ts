@@ -1,9 +1,9 @@
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
-import { AccountInfo, Connection, ParsedAccountData } from '@solana/web3.js'
+import { AccountInfo, Connection, ParsedAccountData, PublicKey } from '@solana/web3.js'
 import { Minter } from '@tokengator/minter'
 import { presetPreOrder } from '@tokengator/presets'
 
-export async function getPreOrderHolders({ connection }: { connection: Connection }) {
+export async function getPreOrderHolders({ connection }: { connection: Connection }): Promise<PreOrderHolder[]> {
   const minter = new Minter({ ...presetPreOrder.config })
   const mint = minter.mint.publicKey.toString()
 
@@ -18,4 +18,9 @@ export async function getPreOrderHolders({ connection }: { connection: Connectio
         account: item.account as AccountInfo<ParsedAccountData>,
       }))
     })
+}
+
+export interface PreOrderHolder {
+  pubkey: PublicKey
+  account: AccountInfo<ParsedAccountData>
 }
