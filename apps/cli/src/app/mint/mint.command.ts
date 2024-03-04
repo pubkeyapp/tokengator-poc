@@ -1,10 +1,8 @@
 import { PublicKey } from '@solana/web3.js'
-import { Minter } from '@tokengator/minter'
+import { Minter, mintTokens } from '@tokengator/minter'
 import { findPreset, presets } from '@tokengator/presets'
 import { Command, CommandRunner, InquirerService, Option } from 'nest-commander'
 import * as pc from 'picocolors'
-
-import { mintTokens } from '../../../../../libs/minter/src/lib/mint-tokens'
 import { CoreService } from '../core/core.service'
 
 @Command({

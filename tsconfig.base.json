@@ -17,6 +17,7 @@
     "paths": {
       "@tokengator/minter": ["libs/minter/src/index.ts"],
       "@tokengator/presets": ["libs/presets/src/index.ts"],
+      "@tokengator/sample-users": ["libs/sample-users/src/index.ts"],
       "@tokengator/ui": ["libs/ui/src/index.ts"]
     }
   },

@@ -7,6 +7,7 @@ import { ClusterFeature } from './cluster/feature'
 import { KeypairFeature } from './keypair/feature'
 import { PresetFeature } from './preset/feature'
 import { SolanaFeature } from './solana/feature'
+import { UserFeature } from './user/feature'
 
 import { WebShellProviders } from './web-shell-providers'
 
@@ -23,7 +24,7 @@ export function WebShell() {
         ]}
         links={[
           { label: 'Presets', link: '/presets' },
-          { label: 'Clusters', link: '/clusters' },
+          { label: 'Users', link: '/users' },
         ]}
       >
         <AppRoutes />
@@ -39,6 +40,7 @@ export function AppRoutes() {
     { path: '/clusters/*', element: <ClusterFeature /> },
     { path: '/keypairs/*', element: <KeypairFeature /> },
     { path: '/solana/*', element: <SolanaFeature /> },
+    { path: '/users/*', element: <UserFeature /> },
     { path: '*', element: <UiNotFound /> },
   ])
 }

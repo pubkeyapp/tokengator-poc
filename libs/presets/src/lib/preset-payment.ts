@@ -3,12 +3,12 @@ import { KEYPAIR_PAY } from './keypairs'
 import { Preset } from './presets'
 
 const kpPay = Keypair.fromSecretKey(Uint8Array.from(KEYPAIR_PAY))
-export const presetPayments: Preset = {
-  id: 'payments',
-  name: 'Payments',
+export const presetPayment: Preset = {
+  id: 'payment',
+  name: 'Payment',
   description: 'Token with immutable ownership and transfer fees.',
   details: [
-    `In this fictitious example, we model the concept of a person opening a payments account at an on-chain bank.`,
+    `In this fictitious example, we model the concept of a person opening a payment account at an on-chain bank.`,
     `The issuer maintains full control over the token, and charges transfer fees.`,
   ],
   image: 'https://raw.githubusercontent.com/pubkeyapp/tokengator-assets/main/global-payments/image.png',

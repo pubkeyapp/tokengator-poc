@@ -33,9 +33,19 @@ export const presetBusinessVisa: Preset = {
     decimals: 0,
     metadata: {
       image: 'https://raw.githubusercontent.com/pubkeyapp/tokengator-assets/main/developer-portal/image.png',
-      name: 'OPOS Pre-Order',
-      symbol: 'PRE',
+      name: 'OPOS Business Visa',
+      symbol: 'BUS',
+      additionalMetadata: [
+        ['status', 'active'],
+        ['expiresAt', new Date(daysFromNow(14)).toISOString()],
+      ],
     },
     mint: kpBus,
   },
+}
+
+function daysFromNow(days: number) {
+  const now = new Date()
+  now.setDate(now.getDate() + days)
+  return now.toISOString().split('T')[0]
 }

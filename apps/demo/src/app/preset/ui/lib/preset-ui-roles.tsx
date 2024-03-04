@@ -3,7 +3,7 @@ import { PresetRole } from '@tokengator/presets'
 
 export function PresetUiRoles({ roles }: { roles: PresetRole[] }) {
   return roles.length ? (
-    <List listStyleType="disc" spacing="xs">
+    <List listStyleType="disc" spacing="xs" withPadding>
       {roles.map((role) => (
         <List.Item key={role.id}>
           Role: <strong>{role.name}</strong>
