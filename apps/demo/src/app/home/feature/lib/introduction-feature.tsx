@@ -7,13 +7,13 @@ export function IntroductionFeature() {
     <UiStack>
       <UiStack align="center" py="xl">
         <UiLogoType height={100} />
-        <Title ff={'"Baloo Bhai 2"'} fw={400} c="dimmed" order={2} mt="xl">
+        <Title fw={400} c="dimmed" order={2} mt="xl">
           Easy Token Gates using Solana Token Extensions.
         </Title>
 
         <Group justify="center" align="center" gap={6}>
           <UiLogoType height={24} />
-          <Title ff={'"Baloo Bhai 2"'} fw={400} pt={3} order={4} display={'flex'}>
+          <Title fw={400} pt={3} order={4} display={'flex'}>
             is brought to you by
           </Title>
           <UiLogoTypePubKey height={24} />

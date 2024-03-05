@@ -51,7 +51,7 @@ export function HomeUiFeatures() {
 
   return (
     <Container size="lg" py="xl">
-      <Title ff={'"Baloo Bhai 2"'} order={2} className={classes.title} ta="center" mt="sm">
+      <Title order={2} className={classes.title} ta="center" mt="sm">
         Create Tokens with ease
       </Title>
       <Text c="dimmed" className={classes.description} ta="center" mt="md">
